@@ -1,0 +1,110 @@
+{% extends 'exams/admin/adminbase.html' %}
+
+{% block content %}
+<head>
+  <style media="screen">
+    input[type=text], select,input[type=number] ,input[type=password], textarea{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  </style>
+
+
+</head>
+
+<br><br>
+<h2 style="text-align:center;">Update Student</h2>
+<div>
+  <form method="post" autocomplete="off" style="margin-left:200px;margin-right:200px;">
+      
+      {% csrf_token %}
+        <label for="name">Student Name</label>
+        <input type="text" id="name" name="name" class="form-control form-control-sm rounded-0" value="{{student.name}}">
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control form-control-sm rounded-0" value="{{student.username}}">
+        {% if error %}
+            <p class="text-danger alert-danger">{{ error }}</p>
+        {% endif %}
+
+        <label for="admis">Admission Nummber</label>
+        <input type="number" id="admis" class="form-control form-control-sm rounded-0" value="{{student.admission_number}}" >
+        {% if error %}
+            <p class="text-danger alert-danger">{{ error }}</p>
+        {% endif %}
+
+        <label for="address">Address</label>
+        <input type="text" name="address" class="form-control form-control-sm rounded-0" value="{{ student.address}}">
+
+        <label for="class">Class</label>
+        <select name="class" id="">
+          <option value="{{student.enrolled_class}}">{{student.enrolled_class}}</option>
+          <option value="">Select Class</option>
+          {% for x in classes %}
+            <option value="{{x.name}}">{{x.name}}</option>
+          {% endfor %}
+        </select>
+          
+        {% comment %} <label for="DOB">Date of Birth</label>
+        <div class="d-flex" id="DOB">
+          <input type="number" class="form-control" name="day"  placeholder="Day" required>
+          <input type="number"class="form-control"  name="month"  placeholder="Month" required> 
+          <input type="number"class="form-control"  name="year"  placeholder="Year" required> 
+        </div> {% endcomment %}
+
+        <label for="password">Password</label>
+        <input type="password" name="password" class="form-control form-control-sm rounded-0" value="{{student.password}}" >
+        <br>
+        <br><br>
+    <input type="submit" class="btn btn-lg rounded-0 btn-primary" value="Update" style="border-radius:0px;">
+  </form>
+</div>
+
+
+
+<br><br><br><br><br><br><br><br>
+{% endblock content %}
+
+{% comment %} <form method="post" autocomplete="off" style="margin-left:200px;margin-right:200px;">
+  {% csrf_token %}
+    <label for="name">Student Name</label>
+    <input type="text" id="name" name="first_name" class="form-control form-control-sm rounded-0" placeholder="Name">
+
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" class="form-control form-control-sm rounded-0" placeholder="Username">
+
+    <label for="admis">Admission Nummber</label>
+    <input type="number" id="admis" class="form-control form-control-sm rounded-0" placeholder="Admission Number" >
+
+    <label for="address">Address</label>
+    <input type="text" name="address" class="form-control form-control-sm rounded-0" placeholder="Address">
+
+    <label for="class">Class</label>
+    <select name="class" id="">
+      <option value="">Select Class</option>
+      {% for x in classes %}
+        <option value="{{x.name}}">{{x.name}}</option>
+      {% endfor %}
+        
+
+    </select>
+    <input type="text" name="class" class="form-control form-control-sm rounded-0" placeholder="Address">
+      
+    <label for="DOB">Date of Birth</label>
+    <div class="d-flex" id="DOB">
+      <input type="number" class="form-control" name="day"  placeholder="Day" required>
+      <input type="number"class="form-control"  name="month"  placeholder="Month" required> 
+      <input type="number"class="form-control"  name="year"  placeholder="Year" required> 
+    </div>
+
+    <label for="password">Password</label>
+    <input type="password" name="password" class="form-control form-control-sm rounded-0" placeholder="Password">
+    <br>
+    <br><br>
+<input type="submit" class="btn btn-lg rounded-0 btn-primary" value="Update" style="border-radius:0px;">
+</form> {% endcomment %}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% extends "exams/students/studentbase.html" %}
+{% load static %}
+<html lang="en" dir="ltr">
+
+<style>
+  .jumbotron{
+    margin-bottom: 0px;
+  }
+</style>
+{% block content %}
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  {% comment %} {% include "exams/students/studentbase.html" %} {% endcomment %}
+<br>
+<section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
+  <div class="container text-center">
+    <h2 class="display-2 text-success">Your exam was submitted successfully!!</h2>
+    <p class="display-5 d-none d-sm-block">You can log out now or continue your exams</p>
+    
+
+  
+    {% comment %} <p><strong> Start Your Journey Here:</strong></p> {% endcomment %}
+    {% comment %} <a href="{% url 'logout' %}" class="btn btn-lg btn-info" style="padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Log Out</a> {% endcomment %}
+    
+    <br><br><br>
+  </div>  
+</section>
+ 
+
+
+
+{% endblock content %}

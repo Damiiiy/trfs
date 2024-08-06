@@ -1,0 +1,85 @@
+{% extends 'exams/students/studentbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary rounded-0">
+    <div class="panel-heading rounded-0">
+      <h6 class="panel-title">Available Courses</h6>
+    </div>
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+
+          <th>Exam Name</th>
+          <th>Exam Time </th>
+          
+          <th>Action</th>
+        </tr>
+      </thead>
+        {% if ava %}
+          {% for t in ava %}
+            <tr>
+              <td> {{t.subj_name}}</td>
+              <td>{{t.exam_date}}</td>
+              <td class="text-center">
+                {% if error %}
+                  <p class="alert alert-danger" >{{error}}</p>
+                {%else %}
+                  <a class="btn btn-primary btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}"><span class="glyphicon glyphicon-check"></span> Attend Exam</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+            <p class="alert-danger" >No available exams</p>
+        {% endif %}  
+            
+    </table>
+  </div>
+</div>
+
+<br><br><br><br><br><br>
+{% endblock content %}
+
+
+<script>
+  window.addEventListener('beforeunload', function(e) {
+    if (!formSubmitted) {
+      const confirmationMessage = 'You have not submitted your exam. Are you sure you want to leave?';
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    }
+  });
+
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (!formSubmitted) {
+        if (!confirm('You have not submitted your exam. Are you sure you want to leave?')) {
+          e.preventDefault();
+        }
+      }
+    });
+  });
+
+</script>

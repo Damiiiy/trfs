@@ -1,0 +1,60 @@
+{% extends 'exams/admin/adminbase.html' %}
+{% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+  a:link {
+        text-decoration: none;
+      }
+    
+  </style>
+</head>
+<h2 style="text-align:center;">Create Exam</h2>
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+      <label for="course_name">Subject Name</label>
+      <input type="text"name="SubjectName" class="form-control rounded-0" placeholder="Example: Physics" required>
+      {% if error %}
+      <p class="text-danger">{{ error }}"</p>
+     {% endif %}
+
+       <label for="Day">Day</label>
+      <input type="number" id="Day" name="day" class="form-control rounded-0" placeholder="05" required>
+
+      <label for="Month">Month</label>
+      <input type="number" name="month" id="Month" class="form-control rounded-0" placeholder="05" required>
+
+      {% comment %} <input type="number" name="year" value="{{}}" > {% endcomment %}
+      <label for="Year">Year</label>
+      <input type="number" id="year"  class="form-control rounded-0" name="year" placeholder="2024" required>
+      
+      {% comment %} <label for="Time">Time for exams</label>
+      <div class="d-flex" id="Time">
+        <input type="number" class="form-control" name="hour" id="" placeholder="Hour" required>
+        <input type="number"class="form-control"  name="minutes" id="" placeholder="Mins" required>  {% endcomment %}
+
+
+
+      {% comment %} </div> {% endcomment %}
+      {% comment %} <input type="time" id="Time"  class="form-control rounded-0" name="time"> {% endcomment %}
+
+      <label for="Class">Class</label>
+      <select name="class" id="Class" class=" form-control rounded-0" required>
+        <option value="">Select Class</option>
+        {% for x in n %}
+          <option value="{{ x.name }}"> {{ x.name }}</option>
+        {% endfor %}
+        
+      </select>
+      
+    </div>
+    
+
+    <button type="submit" class="btn btn-primary rounded-0">Add Course Info</button>
+  </form>
+<br><br><br>
+{% endblock content %}

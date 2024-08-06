@@ -1,0 +1,110 @@
+{% extends 'exams/admin/adminbase.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    .modal-dialog-left {
+      position: fixed;
+      top: 30%;
+      left: 40%;
+      transform: translate(-100%, -50%);
+      width: 400px; /* Adjust width as needed */
+    }
+    .modal-dialog-left1 {
+      position: fixed;
+      top: 0%;
+      left: 40%;
+      transform: translate(-100%, -50%);
+      width: 400px; /* Adjust width as needed */
+    }
+  </style>
+</head>
+<br><br>
+<div class="container">
+  
+  <div class="panel panel-primary rounded-0">
+    <div class="d-flex panel-heading rounded-0">
+      <h6 class="panel-title">Students </h6>
+      {% comment %} <a class="btn btn-info panel-title ml-auto" style="color: white;" data-toggle="modal" data-target="#addModal" >Add Student</a> {% endcomment %}
+  
+  </div>
+
+
+
+
+
+
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+
+          <th>Name</th>
+          <th>Photo</th>
+          <th>Admission Number</th>
+          <th>Address</th>
+          <th>Class</th>
+          <th>Date of Birth</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      {% for t in x %}
+      <tr>
+
+        <td> {{t.name}}</td>
+        <td> <img src="{% static 'img/userpic.jpeg' %}" alt="Profile Pic" height="40px" width="40px" /></td>
+        <td>{{t.admission_number}}</td>
+        <td>{{t.address}}</td>
+        <td>{{t.enrolled_class}}</td>
+        <td>{{ t.DOB }}</td>
+        
+        <td class="text-center"><a class="btn btn-primary btn-xs" style="border-radius: 0%;" href="{% url 'update-student' t.id  %}"><small class="fas fa-edit"></small></a>
+        <a class="btn btn-danger btn-xs" style="border-radius: 0%;" href="{% url 'admin-delete-student' t.id  %}"><small class="fas fa-trash"></small></a></td>
+        {% comment %} <button class="btn btn-primary btn-xs" style="border-radius: 0%;" data-toggle="modal" data-target="#deleteModal"><span class="fas fa-trash"></span></button> {% endcomment %}
+        {% comment %} </td> {% endcomment %}
+
+
+                   <!-- Modal HTML FOR CONFIRM DELETE-->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-left">
+            <div class="modal-content">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Confirm Delete</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <!-- Modal body -->
+              <div class="modal-body">Are you sure you want to delete this Student({{t.name}})?</div>
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'admin-delete-student' t.id %}" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div> 
+
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

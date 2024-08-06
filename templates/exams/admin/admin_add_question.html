@@ -1,0 +1,62 @@
+{% extends 'exams/admin/adminbase.html' %}
+
+{% block content %}
+</head>
+<h2 style="text-align:center;">Add Question</h2>
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+        <label for="question">Subject</label>
+        <input type="text" name="subjID"  value="{{ exam.subj_name }}" class="form-control form-control-sm rounded-0" readonly>
+
+        <br>
+
+      <label for="question">Question</label>
+      <input type="text" name="question" class="form-control form-control-sm rounded-0" required placeholder="Example: Which one of the following is not a phase of Prototyping Model?">
+      
+        <br>
+      <label for="question_number">Marks</label>
+      <input type="number" name="marks" required class="form-control form-control-sm rounded-0" placeholder="Example: 5">
+
+     
+        <br>
+      <label for="option1">Option 1</label>
+      <input type="text" name="opt1" required class="form-control form-control-sm rounded-0" placeholder="Example: Quick Design">
+        <br>
+      <label for="option2">Option 2</label>
+      <input type="text" name="opt2" required class="form-control form-control-sm rounded-0" placeholder="Example: Coding">
+        <br>
+      <label for="option3">Option 3</label>
+      <input type="text" name="opt3" required class="form-control form-control-sm rounded-0" placeholder="Example: Protype Refinement">
+
+      
+        <br>
+      <label for="option4">Option 4</label>
+      <input type="text" name="opt4" required class="form-control form-control-sm rounded-0" placeholder="Example: Engineer Product">
+        <br>
+      <label for="answer">Correct Answer</label>
+      <select name="answer" required class="form-control form-control-sm rounded-0">
+          {% comment %} <option value="">Select Answer</option>
+          <option value="{{ opt1 }}">Option 1</option>
+          <option value="{{ opt2 }}">Option 2</option>
+          <option value="{{ opt3 }}">Option 3</option>
+          <option value="{{ opt4 }}">Option 4</option> {% endcomment %}
+
+           
+          <option value="">Select Answer</option>
+            <option value="Option">Option 1</option>
+            <option value="Option2">Option 2</option>
+            <option value="Option3">Option 3</option>
+            <option value="Option4">Option 4</option> 
+
+      </select>
+      
+
+      
+    </div>
+    
+
+    <button type="submit" class="btn btn-success" style="border-radius:0px;">Submit Question</button>
+  </form>
+<br><br><br>
+{% endblock content %}

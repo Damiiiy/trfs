@@ -1,0 +1,395 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head><script src=" {% static 'js/index/color-modes.js' %}"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>The Rock Foundation Schools</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="">
+
+<link href=" {% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href=" {% static 'css/heros.css' %}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
+      .bd-mode-toggle .dropdown-menu .active .bi {
+        display: block !important;
+      }
+
+      .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff; /* Change background color as needed */
+      z-index: 9999; /* Ensure the preloader is on top of everything */
+    }
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href=" {% static 'css/carousel.css' %}" rel="stylesheet">
+  </head>
+  <body class="d-flex align-items-center py-4 bg-body-secondary">
+
+  {% comment %} <div class="preloader">
+    <div class="spinner-border text-primary spinner" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>  {% endcomment %}
+  <div class="preloader">
+    <div class="spinner" role="status">
+        <img src="{% static 'img/loader.gif' %}" alt="Loading..." />
+    </div>
+</div>
+
+  
+<header data-bs-theme="dark" class="sticky-sm-top">
+  <nav class="navbar navbar-secondary fixed-top bg-light  " style="background-color: gray ;">
+    <div class="container-fluid">
+      <a href = "#" class="navbar-brand col-4 " >
+        <img class="img1" style="border-radius: 10px; height: 70px; width: 170px; mix-blend-mode: multiply" src = "{% static 'img/logo2.png' %}" ></a>
+
+
+
+      <div class="d-flex">
+
+            <a class="m-3 text-secondary btn" aria-current="page" href="#">Home</a>
+            {% if 'logged_in_user' in request.session %}
+                <a class="m-3 text-secondary btn" href="{% url "home" %}">Profile</a>.
+            {% elif 'logged_in_teacher' in request.session %}
+                <a class="m-3 text-secondary btn" href="{% url "teacher_db" %}">Profile</a>.
+            {% else %}
+                {{ pass }}
+            {% endif %}
+      </div>
+    </div>
+  </nav>
+</header>
+<main  style="margin-top: 100px; w-100">
+  <section class="container">
+    <div id="myCarousel" class="carousel slide carousel-fade mb-6" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active bg-body-info">
+          <img class="bd-placeholder-img" width="100%" height="100%" src="{% static 'img/pic3.jpg' %}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
+          <div class="container-fluid">
+            <div class="carousel-caption text-start">
+              <h1>Towards A Realistic Future:</h1>
+              <p class="opacity-1">Welcome to our vibrant educational community, where curiosity meets creativity and learning knows no bounds! At The Rock Foundation Schools, we're not just shaping minds; we're nurturing dreams and empowering future leaders.</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'img/pic1.jpg' %}" width="100%"  height="100%" class="bd-placeholder-img img-responsive" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></img>
+          <div class="container-fluid">
+            <div class="carousel-caption">
+              <h1 class="text-dark"> Where Every Student Shines Bright:</h1>
+              <p class="text-dark">A Blueprint for a Realistic Future"</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img class="bd-placeholder-img img-responsive" width="100%" height="100%" src="{% static 'img/pic2.jpg' %}" aria-hidden="true"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></img>
+          <div class="container-fluid">
+            <div class="carousel-caption text-end">
+              <h1>Navigating the Path to a Realistic Future:</h1>
+              <p>Practical Insights for Today's Learners"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+  
+
+   <div class="b-example-divider"></div>
+
+    <div class="col-md-10 mx-auto col-lg-5 p-5 border rounded-5">
+        <form action="{% url 'login' %}" method="post" class="">
+            {% csrf_token %}
+
+            <h1 class="h3 mb-3 fw-normal">Check Result</h1>
+
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="floatingInput" name="admission_num">
+            <label for="floatingInput">Admission Number</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" name="password">
+            <label for="floatingPassword">Password</label>
+          </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Check</button>
+          <hr class="my-4">
+
+        </form>
+      </div>
+  <div class="b-example-divider"></div>
+
+  <div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <!--<div class="d-flex row">-->
+    <!--  <div class="col-xs-4 p-3 mt-2 justify-conter-center">-->
+    <!--    <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>-->
+    <!--    <h2 class="fw-normal m-3">Heading</h2>-->
+    <!--    <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>-->
+    <!--    <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+    <!--  </div><!-- /.col-lg-4 -->
+    <!--  <div class="col-xs-4 mb-4">-->
+    <!--    <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>-->
+    <!--    <h2 class="fw-normal">Heading</h2>-->
+    <!--    <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>-->
+    <!--    <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+    <!--  </div><!-- /.col-lg-4 -->
+      <!--<div class="col-4">-->
+      <!--  <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>-->
+      <!--  <h2 class="fw-normal">Heading</h2>-->
+      <!--  <p>And lastly this, the third column of representative placeholder content.</p>-->
+      <!--  <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>-->
+      <!--</div><!-- /.col-lg-4 -->
+    <!--</div><!-- /.row -->
+
+    <!--</div>-->
+    <!--<div class="b-example-divider"></div>
+
+
+
+
+
+    <!-- START THE FEATURETTES -->
+
+    <!--<hr class="featurette-divider">-->
+
+    <div class="row featurette m-3 p-3">
+      <div class="col-md-7 p-3">
+        <h2 class="featurette-heading fw-normal lh-1">Teamwork and Strategy in Action! <span class="text-body-secondary">It’ll blow your mind.</span></h2>
+        <p class="lead">Games like Thug-or-War are more than just fun and competition. They provide valuable learning opportunities for our students. This activity helped develop critical thinking, communication, and strategic planning in a collaborative environment</p>
+      </div>
+      <div class="col-md-5">
+        <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image mx-auto" width="100%" height="auto" src="{% static 'img/pic4.jpg' %}" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette m-3">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading fw-normal lh-1">Oh yeah! <span class="text-body-secondary" >Students during their computer based terminal examination</span></h2>
+        <p class="lead">"Computer-Based Test (CBT) Terminal Examinations are currently underway for students from Junior Secondary School 1 (JSS1) to Senior Secondary School 3 (SS3). This innovative approach to assessment leverages technology to administer exams in a digital format, offering numerous advantages over traditional pen-and-paper tests.</p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" src="{% static 'img/pic7.jpg' %}" role="img"  preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+      </div>
+    </div>
+
+    <!--<hr class="featurette-divider">-->
+
+    <!--<div class="row featurette m-3">-->
+    <!--  <div class="col-md-7">-->
+    <!--    <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span></h2>-->
+    <!--    <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>-->
+    <!--  </div>-->
+    <!--  <div class="col-md-5">-->
+    <!--    <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>-->
+    <!--  </div>-->
+    <!--</div>-->
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+
+  <!-- FOOTER -->
+
+  <div class="b-example-divider"></div>
+
+
+  <div class="container">
+    <footer class="py-3 my-4">
+        <div class="container-fluid d-block align-items-stretch">
+                        <!-- first item-->
+					<div class="info-wrap  w-100 p-lg-5 p-4">
+						<h3 class="mb-4 mt-md-4">Contact us</h3>
+
+						        <!-- first item-->
+
+				        <div class="dbox w-100 d-flex align-items-start">
+				        	<div class="icon d-flex align-items-center justify-content-center rounded-circle border-secondary-subtle" style="background-color:#eee;">
+				        		<span class="fa fa-map-marker p-2"></span>
+				        	</div>
+				        	<div class="text pl-3 m-1">
+					            <p><span><b>Address:</b></span> Atiekpe-Obudu, Obudu Cross River State</p>
+					        </div>
+				         </div>
+
+				         <!-- next item-->
+
+				        <div class="dbox w-100 d-flex align-items-center">
+				        	<div class="icon d-flex align-items-center justify-content-center border-secondary-subtle rounded-circle" style="background-color:#eee;">
+				        		<i class="bi bi-telephone-fill p-2"></i>
+				        	</div>
+				        	<div class="text pl-3 m-1">
+					            <p><span><b>Phone:</b></span> <a href="tel://08022410451">+(234)-802-241-0451</a></p>
+					        </div>
+				        </div>
+
+				         <!-- next item-->
+				        <div class="dbox w-100 d-flex align-items-center">
+				        	<div class="icon d-flex align-items-center justify-content-center border-secondary-subtle rounded-circle" style="background-color:#eee;">
+				        		<span class="fa fa-paper-plane p-2"></span>
+				        	</div>
+				        	<div class="text pl-3 m-1">
+					            <p><span><b>Email:</b></span> <a href="mailto:trfsobudu@gmail.com">trfsobudu@gmail.com</a></p>
+					        </div>
+					    </div>
+
+					     <!-- next item-->
+
+				        <div class="dbox w-100 d-flex align-items-center">
+				        	<div class="icon d-flex align-items-center justify-content-center border-secondary-subtle rounded-circle" style="background-color:#eee;">
+				        		<span class="bi bi-facebook p-2"></span>
+				        	</div>
+				        	<div class="text pl-3">
+					            <p><span><b>Facebook</b></span> <a href="https://www.facebook.com/trfsobudu" class="text-dark">Contact Us</a></p>
+					        </div>
+				        </div>
+				         <!-- next item-->
+
+            <div class="d-block mt-5">
+              <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary"></a></li>
+                <li class="nav-item"><a href="{% url 'index' %}" class="nav-link px-2 text-body-secondary">Write Exams</a></li>
+                <li class="nav-item"><a href="{% url 'login_t' %}" class="nav-link btn px-2 text-body-secondary">Login as Teacher</a></li>
+              </ul>
+              <small class="text-center text-body-secondary">&copy;<i>Powered by MyPorta Management Systems</i></small>
+
+        </div>
+    </footer>
+  </div>
+
+
+
+
+
+</main>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+ <script>
+    $(window).on('load', function() {
+      $(".preloader").fadeOut("slow");
+    });
+  </script>
+<script src="{% static 'js/index/bootstrap.bundle.min.js' %}"></script>
+
+    </body>
+</html>
