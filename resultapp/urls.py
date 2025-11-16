@@ -17,4 +17,5 @@ urlpatterns = [
     path('update_result/<int:student_id>/<int:result_id>/', views.update_result, name='update_result'),
 
     path('add_student/', views.add_student, name='add_stu'),
+    path('bulk_upload/', views.bulk_upload_students, name='bulk_upload'),
 ]

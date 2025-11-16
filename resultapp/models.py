@@ -21,12 +21,10 @@ class Teacher(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
-    username = models.CharField(max_length=100, unique=True, null=True, )
     gender = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=20, null=True)
-    admission_number = models.IntegerField(null=True, unique=True)
+    admission_number = models.CharField(null=True, unique=True)
     address = models.CharField(max_length=100)
-    DOB = models.DateField()
     enrolled_class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -46,16 +44,24 @@ class Student_Result(models.Model):
 
     @property
     def grade(self):
-        if self.total_scores >= 90:
-            return 'A'
-        elif self.total_scores >= 80:
-            return 'B'
+        if self.total_scores >= 80:
+            return 'A1'
+        elif self.total_scores >= 75:
+            return 'A2'
         elif self.total_scores >= 70:
-            return 'C'
+            return 'A3'
+        elif self.total_scores >= 65:
+            return 'C4'
         elif self.total_scores >= 60:
-            return 'D'
+            return 'C5'
+        elif self.total_scores >= 55:
+            return 'C6'
+        elif self.total_scores >= 50:
+            return 'P7'
+        elif self.total_scores >= 45:
+            return 'P8'
         else:
-            return 'F'
+            return 'F9'
         
     def save(self, *args, **kwargs):
         self.total_scores = self.test_scores + self.exam_scores  # calculate total_scores

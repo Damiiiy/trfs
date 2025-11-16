@@ -25,15 +25,13 @@
 <div class="container">
   <div class="panel panel-primary rounded-0">
     <div class="panel-heading rounded-0">
-      <h6 class="panel-title">Available Courses</h6>
+      <h6 class="panel-title">Available Exams</h6>
     </div>
     <table class="table table-hover table-bordered" id="dev-table">
       <thead>
         <tr>
-
           <th>Exam Name</th>
-          <th>Exam Time </th>
-          
+          <th>Exam Date </th>
           <th>Action</th>
         </tr>
       </thead>
@@ -43,11 +41,17 @@
               <td> {{t.subj_name}}</td>
               <td>{{t.exam_date}}</td>
               <td class="text-center">
-                {% if error %}
-                  <p class="alert alert-danger" >{{error}}</p>
-                {%else %}
-                  <a class="btn btn-primary btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}"><span class="glyphicon glyphicon-check"></span> Attend Exam</a>
-                {% endif %}
+                <form method="POST">
+                  {%csrf_token%}
+                  {% if error %}
+                    <p class="alert alert-danger" >{{error}}</p>
+                  {% endif %}
+                  <input type="text" name="code">
+                  <input type="hidden" name="exam_id" value="{{t.id}}">
+                  <button type="submit" class="btn btn-primary btn-sm" style="border-radius:0px;" ><span class="glyphicon glyphicon-check"></span> Attend Exam</button>
+                </form>
+<!--                  <a class="btn btn-primary btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}"><span class="glyphicon glyphicon-check"></span> Attend Exam</a>-->
+
               </td>
             </tr>
           {% endfor %}

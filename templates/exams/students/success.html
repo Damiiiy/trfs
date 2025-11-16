@@ -7,26 +7,50 @@
   .jumbotron{
     margin-bottom: 0px;
   }
+
 </style>
 {% block content %}
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  {% comment %} {% include "exams/students/studentbase.html" %} {% endcomment %}
-<br>
-<section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
-  <div class="container text-center">
-    <h2 class="display-2 text-success">Your exam was submitted successfully!!</h2>
-    <p class="display-5 d-none d-sm-block">You can log out now or continue your exams</p>
-    
 
-  
-    {% comment %} <p><strong> Start Your Journey Here:</strong></p> {% endcomment %}
-    {% comment %} <a href="{% url 'logout' %}" class="btn btn-lg btn-info" style="padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Log Out</a> {% endcomment %}
-    
-    <br><br><br>
-  </div>  
-</section>
+<div class="result-container">
+  <div class="result-header text-center">
+    <h2>Exam Results</h2>
+    <p class="text-muted">Review your performance below</p>
+  </div>
+  <table class="table summary-table">
+    <tr>
+      <td><strong>Student Name:</strong></td>
+      <td>{{ user.name }}</td>
+    </tr>
+    <tr>
+      <td><strong>Admission Number:</strong></td>
+      <td>{{ user.admission_number }}</td>
+    </tr>
+    <tr>
+      <td><strong>Class:</strong></td>
+      <td>{{ user.enrolled_class }}</td>
+    </tr>
+    <tr>
+      <td><strong>Subject:</strong></td>
+      <td>{{ exam.subj_name }}</td>
+    </tr>
+    <tr>
+      <td><strong>Total Marks:</strong></td>
+      <td>{{ total_marks }}</td>
+    </tr>
+    <tr>
+      <td><strong>Marks Obtained:</strong></td>
+      <td class="score-box">{{ obtained_marks }}</td>
+    </tr>
+  </table>
+
+  <div class="text-center mt-4">
+    <a href="{% url 'available_exam' %}" class="btn btn-outline-primary">Back to Exams</a>
+    <a href="{% url 'exam_user' %}" class="btn btn-outline-secondary">Go to Dashboard</a>
+  </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
  
 
 

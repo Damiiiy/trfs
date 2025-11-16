@@ -10,38 +10,30 @@ from datetime import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 
+
+
+
+import pandas as pd
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Student, Class  # Adjust import as needed
+
 # Create your views here.
 
 def index(request):
-
     n = Student.objects.all()
     m = Student_Result.objects.all()
-
     o = Class.objects.filter(name='Jss1a')
     # t = Teacher.objects.filter()
     return render(request, 'index.html')
-
-
 
 def contact_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         message = request.POST.get('message')
-
-        # send_mail(
-        #     subject='New Contact Form Submission',
-        #     message=f'Name: {name}\nEmail: {email}\nMessage: {message}',
-        #     from_email=settings.DEFAULT_FROM_EMAIL,
-        #     recipient_list=[hyylittle@gmail.com],  # Replace with your website email address
-        #     fail_silently=False,
-        # )
         return render(request, 'index.html', {'success':'Sent Successfully!'})  # Redirect to thank you page
     return render(request, 'index.html')  # Render the contact form
-
-
-
-
 
 
 def login_p(request):
@@ -74,9 +66,6 @@ def login_p(request):
                 return render(request ,'index.html', {'error': 'Invalid username or password'})
 
         return render(request, 'index.html')
-
-
-
 
 def dbd(request):
     if 'logged_in_user' in request.session:
@@ -143,7 +132,59 @@ def t_dbd(request):
         return redirect('login')  # Redirect to the login page if not logged in
 
 
+# views.py
+from django.contrib.auth.hashers import make_password
 
+from django.contrib import messages
+
+def bulk_upload_students(request):
+    if 'logged_in_teacher' in request.session:
+        username = request.session['logged_in_teacher']
+        user = Teacher.objects.get(username=username)
+        assigned_class = user.assigned_class
+        students = Student.objects.filter(enrolled_class=assigned_class)
+
+        if request.method == "POST" and request.FILES.get("file"):
+            file = request.FILES["file"]
+            print("File received:", file)
+            try:
+                df = pd.read_excel(file)
+                existing_admissions = set(Student.objects.values_list("admission_number", flat=True))
+
+                for _, row in df.iterrows():
+                    name = row.get("name")
+                    admission_number = row.get("admission_number")
+                    address = row.get("address")
+                    class_name = row.get("enrolled_class")
+
+                    if not name or not admission_number or not address:
+                        continue
+
+                    if admission_number in existing_admissions:
+                        continue
+
+                    enrolled_class = None
+                    if class_name:
+                        normalized_name = class_name.strip().title()  # Normalize case and trim whitespace
+                        enrolled_class, _ = Class.objects.get_or_create(name__iexact=normalized_name, defaults={'name': normalized_name})
+
+                    Student.objects.create(
+                        name=name,
+                        gender=row.get("gender"),
+                        password="trfs2025",
+                        admission_number=admission_number,
+                        address=address,
+                        enrolled_class=enrolled_class
+                    )
+
+                students = Student.objects.filter(enrolled_class=assigned_class)
+                messages.success(request, "Students uploaded successfully.")
+            except Exception as e:
+                messages.error(request, f"Error uploading students: {e}")
+
+        return redirect('teacher_db')
+
+    return redirect('login')
 
 
 def add_student(request):
@@ -176,7 +217,7 @@ def add_student(request):
         return render(request, 'add_stu.html' , {'user': user, 'students': students})
 
 
-def update_student(request,student_id):
+def update_student(request, student_id):
     if 'logged_in_teacher' in request.session:
         username = request.session['logged_in_teacher']
         try:

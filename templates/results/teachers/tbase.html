@@ -20,7 +20,7 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: "Gill Sans", sans-serif;;
+      font-family: sans-serif;
     }
 
     header {
@@ -140,10 +140,10 @@
 
     .content {
       margin-left: 250px;
-      
+
       height: 100vh;
       transition: 0.5s;
-    } 
+    }
 
     #check:checked~.content {
       margin-left: 60px;
@@ -166,9 +166,7 @@
 
 
 </head>
-
 <body class="container-fluid">
-
     <input type="checkbox" id="check">
     <!--header area start-->
     <header class="shadow bg-light fixed-top container-fluid">
@@ -186,21 +184,11 @@
     <!--sidebar start-->
     <div class="sidebar">
       <center>
-
         <img src="{% static "image/admin-avatar.png" %}" class="profile_image" alt="">
         <h4>Hello {{ teacher }}!</h4>
         <h6 style="color:white;">(Teacher {{ teacher.assigned_class}})</h6>
-
       </center>
-
       <a href="{% url 'teacher_db' %}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      {% comment %} <a href="{% url 'admin_teacher' %}"><i class="fas fa-chalkboard-teacher"></i><span>Teacher Section</span></a>
-      <a href="{% url 'admin_student' %}"><i class="fas fa-user-graduate"></i><span>Student Section</span></a>
-      <a href="{% url 'admin_exam' %}"><i class="fas fa-tools"></i><span>Manage Exams</span></a>
-      <a href="{% url 'admin_question' %}"><i class="fas fa-tools"></i><span>Manage Questions</span></a> {% endcomment %}
-       
-
-
     </div>
     <!--sidebar end-->
 
@@ -212,9 +200,8 @@
 
       {% endblock content %}
 
-
       <br><br><br>
-      {% comment %} {% include "exams/footer.html" %} {% endcomment %}
+<!--      {% comment %} {% include "exams/footer.html" %} {% endcomment %}-->
     </div>
     <!--content end-->
 </body>
@@ -229,3 +216,4 @@
 
 </script>
 </html>
+

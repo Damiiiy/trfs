@@ -3,60 +3,79 @@
 {% block content %}
 </head>
 <h2 style="text-align:center;">Add Question</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
-    {%csrf_token%}
+
+
+
+
+{% if error_message %}
+  <div style="color: red; font-weight: bold;">{{ error_message }}</div>
+{% endif %}
+{% if success_message %}
+  <div style="color: green; font-weight: bold;">{{ success_message }}</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" autocomplete="off" action="{% url 'admin-upload-question' exam.id %}"style="margin:100px;margin-top: 0px;">
+  {% csrf_token %}
     <div class="form-group">
-        <label for="question">Subject</label>
-        <input type="text" name="subjID"  value="{{ exam.subj_name }}" class="form-control form-control-sm rounded-0" readonly>
-
-        <br>
-
-      <label for="question">Question</label>
-      <input type="text" name="question" class="form-control form-control-sm rounded-0" required placeholder="Example: Which one of the following is not a phase of Prototyping Model?">
-      
-        <br>
-      <label for="question_number">Marks</label>
-      <input type="number" name="marks" required class="form-control form-control-sm rounded-0" placeholder="Example: 5">
-
-     
-        <br>
-      <label for="option1">Option 1</label>
-      <input type="text" name="opt1" required class="form-control form-control-sm rounded-0" placeholder="Example: Quick Design">
-        <br>
-      <label for="option2">Option 2</label>
-      <input type="text" name="opt2" required class="form-control form-control-sm rounded-0" placeholder="Example: Coding">
-        <br>
-      <label for="option3">Option 3</label>
-      <input type="text" name="opt3" required class="form-control form-control-sm rounded-0" placeholder="Example: Protype Refinement">
-
-      
-        <br>
-      <label for="option4">Option 4</label>
-      <input type="text" name="opt4" required class="form-control form-control-sm rounded-0" placeholder="Example: Engineer Product">
-        <br>
-      <label for="answer">Correct Answer</label>
-      <select name="answer" required class="form-control form-control-sm rounded-0">
-          {% comment %} <option value="">Select Answer</option>
-          <option value="{{ opt1 }}">Option 1</option>
-          <option value="{{ opt2 }}">Option 2</option>
-          <option value="{{ opt3 }}">Option 3</option>
-          <option value="{{ opt4 }}">Option 4</option> {% endcomment %}
-
-           
-          <option value="">Select Answer</option>
-            <option value="Option">Option 1</option>
-            <option value="Option2">Option 2</option>
-            <option value="Option3">Option 3</option>
-            <option value="Option4">Option 4</option> 
-
-      </select>
-      
-
-      
+        <h2>Upload Questions for {{ exam.subj_name }}</h2>
+        <input type="file" name="docx_file" accept=".docx" required>
     </div>
-    
 
-    <button type="submit" class="btn btn-success" style="border-radius:0px;">Submit Question</button>
-  </form>
+    <button type="submit" class="btn btn-success" style="border-radius:0px;">Upload Question</button>
+</form>
+
+<!--<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">-->
+<!--    {%csrf_token%}-->
+
+<!--    <div class="form-group">-->
+<!--        <label for="question">Subject</label>-->
+<!--        <input type="text" name="subjID"  value="{{ exam.subj_name }}" class="form-control form-control-sm rounded-0" readonly>-->
+<!--        <br>-->
+<!--        <label for="question">Upload Question</label>-->
+<!--        <input type="text" name="question" class="form-control form-control-sm rounded-0" required placeholder="Example: Which one of the following is not a phase of Prototyping Model?">-->
+
+<!--        <br>-->
+<!--&lt;!&ndash;      <label for="question_number">Marks</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <input type="number" name="marks" required class="form-control form-control-sm rounded-0" placeholder="Example: 5">&ndash;&gt;-->
+
+<!--&lt;!&ndash;     &ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label for="option1">Option 1</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <input type="text" name="opt1" required class="form-control form-control-sm rounded-0" placeholder="Example: Quick Design">&ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label for="option2">Option 2</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <input type="text" name="opt2" required class="form-control form-control-sm rounded-0" placeholder="Example: Coding">&ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label for="option3">Option 3</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <input type="text" name="opt3" required class="form-control form-control-sm rounded-0" placeholder="Example: Protype Refinement">&ndash;&gt;-->
+
+<!--&lt;!&ndash;      &ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label for="option4">Option 4</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <input type="text" name="opt4" required class="form-control form-control-sm rounded-0" placeholder="Example: Engineer Product">&ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label for="answer">Correct Answer</label>&ndash;&gt;-->
+<!--&lt;!&ndash;      <select name="answer" required class="form-control form-control-sm rounded-0">&ndash;&gt;-->
+<!--&lt;!&ndash;          {% comment %} <option value="">Select Answer</option>&ndash;&gt;-->
+<!--&lt;!&ndash;          <option value="{{ opt1 }}">Option 1</option>&ndash;&gt;-->
+<!--&lt;!&ndash;          <option value="{{ opt2 }}">Option 2</option>&ndash;&gt;-->
+<!--&lt;!&ndash;          <option value="{{ opt3 }}">Option 3</option>&ndash;&gt;-->
+<!--&lt;!&ndash;          <option value="{{ opt4 }}">Option 4</option> {% endcomment %}&ndash;&gt;-->
+
+<!--&lt;!&ndash;           &ndash;&gt;-->
+<!--&lt;!&ndash;          <option value="">Select Answer</option>&ndash;&gt;-->
+<!--&lt;!&ndash;            <option value="Option">Option 1</option>&ndash;&gt;-->
+<!--&lt;!&ndash;            <option value="Option2">Option 2</option>&ndash;&gt;-->
+<!--&lt;!&ndash;            <option value="Option3">Option 3</option>&ndash;&gt;-->
+<!--&lt;!&ndash;            <option value="Option4">Option 4</option> &ndash;&gt;-->
+
+<!--      -->
+
+<!--      -->
+<!--    </div>-->
+<!--    -->
+
+<!--    <button type="submit" class="btn btn-success" style="border-radius:0px;">Submit Question</button>-->
+<!--  </form>-->
 <br><br><br>
 {% endblock content %}

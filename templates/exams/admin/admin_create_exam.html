@@ -43,14 +43,7 @@
       {% comment %} <input type="time" id="Time"  class="form-control rounded-0" name="time"> {% endcomment %}
 
       <label for="Class">Class</label>
-      <select name="class" id="Class" class=" form-control rounded-0" required>
-        <option value="">Select Class</option>
-        {% for x in n %}
-          <option value="{{ x.name }}"> {{ x.name }}</option>
-        {% endfor %}
-        
-      </select>
-      
+        <input type="text" name="class" id="Class" class=" form-control rounded-0" required>
     </div>
     
 

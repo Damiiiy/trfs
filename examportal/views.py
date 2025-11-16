@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render, redirect,get_object_or_404
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.db import IntegrityError
@@ -9,19 +10,26 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 
 
+from docx import Document
+import re
+from .utils import import_questions_from_docx
+from django import forms
+from .models import Exam, Question
+
+from django.utils import timezone
+from django.db.models import Q
+
+
 # Create your views here.
 
 def index(request):
-
     n = models.Student.objects.all()
     m = models.Student_Result.objects.all()
-
     o = models.Class.objects.filter(name='Jss1a')
     # t = Teacher.objects.filter()
     return render(request, 'exams/index.html', context={'n': n,'m': m,'o':o})
 
 def studentlogin(request):
-     
      if 'logged_in_user' in request.session:
           return redirect('home')
      elif 'logged_in_teacher' in request.session:
@@ -74,9 +82,7 @@ def take_exam(request, exam_id):
         admission_num = request.session['exam_user']
         try:
             user = models.Student.objects.get(admission_number=admission_num)
-          #   result = models.Result.objects.filter(student=user)
             today = timezone.now().date()
-          #   user = models.Student.objects.get(admission_number=admission_num)
             exams = mdb_models.Exam.objects.get(id=exam_id)
             question = mdb_models.Question.objects.filter(exams=exams)
             total_q = mdb_models.Question.objects.filter(exams=exams).count()
@@ -84,31 +90,50 @@ def take_exam(request, exam_id):
         except models.Student.DoesNotExist:
             pass
 
-        
-
         return render(request, 'exams/students/student_exam.html', {'user':admission_num})
      else:
         return redirect('studentlogin')
-     
+
 def student_available_exam(request):
-     if 'exam_user' in request.session:
-          admission_num = request.session['exam_user']
-          today = timezone.now().date()
-          user = models.Student.objects.get(admission_number=admission_num)
-          ava_exams = mdb_models.Exam.objects.filter(assigned_class=user.enrolled_class, exam_date=today)
+    if 'exam_user' in request.session:
+        admission_num = request.session['exam_user']
+        today = timezone.now().date()
+        user = models.Student.objects.get(admission_number=admission_num)
 
+        # Get the class name string from the related Class model
+        enrolled_class = user.enrolled_class.name  # e.g., 'Jss1a'
+        level_prefix = enrolled_class[:-1]         # e.g., 'Jss1'
 
-          # checking if the exams is already written 
-          # for exam in ava_exams:
-          #   if models.Student_Result.objects.filter(student=user,subject=exam).exists():
-          #       return render(request, 'exams/students/student_exam.html', {
-          #           'error': "This exam has already been taken.",
-          #           'user': user,
-          #           'ava': ava_exams,
-          #       })
-          return render(request, 'exams/students/student_exam.html', {'user': user, 'ava': ava_exams, })
-     else:
-          return redirect('studentlogin')
+        # Filter exams for the level (e.g., all 'Jss1' classes)
+        ava_exams = mdb_models.Exam.objects.filter(
+            assigned_class__istartswith=level_prefix,
+            exam_date=today
+        )
+
+        if request.method == 'POST':
+            code = request.POST.get('code')
+            exam_id = request.POST.get('exam_id')
+            exam = mdb_models.Exam.objects.get(id=exam_id)
+            try:
+               if int(code) == exam.code:
+                    return redirect('take-exam', exam_id=exam_id)
+               else:
+                    return render(request, 'exams/students/student_exam.html', {
+                         'user': user,
+                         'ava': ava_exams,
+                         'error': "Invalid Code"
+                    })
+            except ValueError:
+               return render(request, 'exams/students/student_exam.html', {
+                    'user': user,
+                    'ava': ava_exams,
+                    'error': "Code must be a number"
+               })
+
+        
+        return render(request, 'exams/students/student_exam.html', {'user': user,'ava': ava_exams,})
+    else:
+        return redirect('studentlogin')
      
 
 def user_logout(request):
@@ -116,76 +141,121 @@ def user_logout(request):
         del request.session['exam_user']
     return redirect('index')
 
+
+
 def start_exam(request, exam_id):
-    if 'exam_user' in request.session:
-        admission_num = request.session['exam_user']
-        try:
-            user = models.Student.objects.get(admission_number=admission_num)
-            exam = mdb_models.Exam.objects.get(id=exam_id, assigned_class=user.enrolled_class )
+    if 'exam_user' not in request.session:
+        return redirect('studentlogin')
 
-            questions = mdb_models.Question.objects.filter(exams=exam)
-
-            if models.Student_Result.objects.filter(student=user, subject=exam).exists():
-                return render(request, 'exams/students/start_exam.html', {'error': "This Exams Has been taken.", 'user': user})
-
-        except Exception:
-            pass
-        return render(request, 'exams/students/start_exam.html', {'question': questions, 'user': user, 'exam': exam})
-    else:
-          return redirect('studentlogin')
-
-
-# @csrf_protect()
-def calculate_marks(request):
-    if 'exam_user' in request.session:
-        admission_num = request.session['exam_user']
+    admission_num = request.session['exam_user']
+    try:
         user = models.Student.objects.get(admission_number=admission_num)
-    
-        if request.method == 'POST':
-          
-          exam_id = request.POST.get('exam_id')
-          exams = mdb_models.Exam.objects.get(id=exam_id)
-          questions = mdb_models.Question.objects.filter(exams=exams)
-          results = models.Student_Result.objects.all()
-           
-          # if models.Student_Result.objects.filter(student=user, subject=exams).exists():
-          #       # You can handle this case as needed, for example:
-          #       return render(request,  'exams/students/start_exam.html', {'error':"This Exams Has been taken.", 'user' : user})
+        exam = mdb_models.Exam.objects.get(id=exam_id)
+        questions = mdb_models.Question.objects.filter(exams=exam)
+
+        if models.Student_Result.objects.filter(student=user, subject=exam).exists():
+            return render(request, 'exams/students/start_exam.html', {
+                'error': "This exam has already been taken.",
+                'user': user,
+                'exam': exam,
+                'question': [],
+                'option_labels': [('option1', 'A'), ('option2', 'B'), ('option3', 'C'), ('option4', 'D')]
+            })
+
+        return render(request, 'exams/students/start_exam.html', {
+            'question': questions,
+            'user': user,
+            'exam': exam,
+            'option_labels': [('option1', 'A'), ('option2', 'B'), ('option3', 'C'), ('option4', 'D')]
+        })
+
+    except (models.Student.DoesNotExist, mdb_models.Exam.DoesNotExist):
+        return render(request, 'exams/students/start_exam.html', {
+            'error': "Invalid student or exam.",
+            'question': [],
+            'user': None,
+            'exam': None,
+            'option_labels': [('option1', 'A'), ('option2', 'B'), ('option3', 'C'), ('option4', 'D')]
+        })
+
+# def start_exam(request, exam_id):
+#     if 'exam_user' in request.session:
+#         admission_num = request.session['exam_user']
+#         try:
+#             user = models.Student.objects.get(admission_number=admission_num)
+#             exam = mdb_models.Exam.objects.get(id=exam_id)
+
+#             questions = mdb_models.Question.objects.filter(exams=exam)
+
+#             if models.Student_Result.objects.filter(student=user, subject=exam).exists():
+#                 return render(request, 'exams/students/start_exam.html', {'error': "This Exams Has been taken.", 'user': user})
+
+#         except Exception:
+#             pass
+#         return render(request, 'exams/students/start_exam.html', {'question': questions, 'user': user, 'exam': exam})
+#     else:
+#           return redirect('studentlogin')
 
 
-          total_marks = 0
-          obtained_marks = 0
-          
-          # for question in questions:
-          #      selected_option = request.POST.get(str(question.id))
-          #      if selected_option == question.answer:
-          #           obtained_marks += question.marks  # Assuming you have a 'marks' field in the Question model
-          for question in questions:
-               total_marks += question.marks
-               # selected_option = request.POST.get(str(question.id))
-               selected_option = request.POST.get(f'question_{question.id}')
-               if selected_option == question.answer:
-                    obtained_marks += question.marks
+def calculate_marks(request):
+    if 'exam_user' not in request.session:
+        return redirect('studentlogin')
 
-          # return HttpResponse(obtained_marks)
-          exam_score = models.Student_Result(student=user, subject=exams, exam_scores=obtained_marks)
-          exam_score.save()
-          return redirect('success')
-               # exam_score = models.Student_Result(student=user, subject=exams, exam_scores=obtained_marks)
-               # exam_score.save()
-          # return redirect('available_exam')
-          #    return render(request, 'student/result.html', {'exam': exams, 'total_marks': total_marks})
+    admission_num = request.session['exam_user']
+    try:
+        user = models.Student.objects.get(admission_number=admission_num)
+    except models.Student.DoesNotExist:
+        return redirect('studentlogin')
 
-        return HttpResponseRedirect(reverse('student:take_test', args=[exam_id]))
-    else:
-          return redirect('studentlogin')
+    if request.method == 'POST':
+        exam_id = request.POST.get('exam_id')
+        try:
+            exam = mdb_models.Exam.objects.get(id=exam_id)
+        except mdb_models.Exam.DoesNotExist:
+            return redirect('available_exam')
+
+        # Prevent duplicate submissions
+        if models.Student_Result.objects.filter(student=user, subject=exam).exists():
+            return render(request, 'exams/students/start_exam.html', {
+                'error': "You have already taken this exam.",
+                'user': user,
+                'exam': exam,
+                'question': [],
+                'option_labels': [('option1', 'A'), ('option2', 'B'), ('option3', 'C'), ('option4', 'D')]
+            })
+
+        questions = mdb_models.Question.objects.filter(exams=exam)
+        total_marks = sum(q.marks for q in questions)
+        obtained_marks = 0
+
+        for question in questions:
+            selected_option = request.POST.get(f'question_{question.id}')
+            if selected_option == question.answer:
+                obtained_marks += question.marks
+
+        # Save result
+        models.Student_Result.objects.create(
+            student=user,
+            subject=exam,
+            exam_scores=obtained_marks
+        )
+
+        return render(request, 'exams/students/success.html', {
+            'user': user,
+            'exam': exam,
+            'total_marks': total_marks,
+            'obtained_marks': obtained_marks
+        })
+
+    return HttpResponseRedirect(reverse('student:take_test', args=[exam_id]))
 
 
 def success(request):
      if 'exam_user' in request.session:
           admission_num = request.session['exam_user']
           user = models.Student.objects.get(admission_number=admission_num)
-          return render(request, 'exams/students/success.html', {'user': user})
+          
+          return render(request, 'exams/students/success.html', {'user': user, })
      else:
           return redirect('studentlogin')
 
@@ -320,36 +390,45 @@ def admin_question(request):
           return render(request, 'exams/admin/admin_question.html', context={'user': AdminUser})
 
 
-
 def admin_create_exams(request):
-     if 'admin_user' in request.session:
-          AdminUser = request.session['admin_user']
-          classes = models.Class.objects.all()
-          if request.method == 'POST':
-               subj = request.POST.get('SubjectName')
-               day = request.POST.get('day')
-               month = request.POST.get('month')
-               year = request.POST.get('year')
-               exams_class = request.POST.get('class')
-               
-               
-               subj1 = subj.capitalize()
-               if mdb_models.Exam.objects.filter(subj_name=subj1, assigned_class=exams_class).exists():
-                    
-                    return render(request, 'exams/admin/admin_create_exam.html', context={'error': 'This exams already exists for this class!!', 'n': classes, 'user': AdminUser})
-               
-              
-               Examdate = year + '-' + month + '-' + day
-               mdb_models.Exam.objects.create(assigned_class=exams_class, 
-                                              subj_name=subj1,
-                                              exam_date=Examdate, 
-                                              
-                                              )
-               
-               return redirect('admin_create_exams')
+    if 'admin_user' in request.session:
+        AdminUser = request.session['admin_user']
+        classes = models.Class.objects.all()
 
-          return render(request, 'exams/admin/admin_create_exam.html', context={'user': AdminUser, 'n': classes})
-     
+        if request.method == 'POST':
+            subj = request.POST.get('SubjectName')
+            day = request.POST.get('day')
+            month = request.POST.get('month')
+            year = request.POST.get('year')
+            exams_class = request.POST.get('class')
+
+            subj1 = subj.capitalize()
+            if mdb_models.Exam.objects.filter(subj_name=subj1, assigned_class=exams_class).exists():
+                return render(request, 'exams/admin/admin_create_exam.html', context={
+                    'error': 'This exam already exists for this class!!',
+                    'n': classes,
+                    'user': AdminUser
+                })
+
+            Examdate = f"{year}-{month}-{day}"
+
+            # Generate a unique 4-digit code
+            while True:
+                exam_code = random.randint(1000, 9999)
+                if not mdb_models.Exam.objects.filter(code=exam_code).exists():
+                    break
+
+            # Create the exam with the unique code
+            mdb_models.Exam.objects.create(
+                assigned_class=exams_class,
+                subj_name=subj1,
+                exam_date=Examdate,
+                code=exam_code
+            )
+
+            return redirect('admin-view-exam')
+
+        return render(request, 'exams/admin/admin_create_exam.html', context={'user': AdminUser, 'n': classes})
 def admin_view_question(request, exam_id):
      if 'admin_user' in request.session:
           AdminUser = request.session['admin_user']
@@ -371,7 +450,7 @@ def admin_delete_exam(request, id):
           AdminUser = request.session['admin_user']
           exam = mdb_models.Exam.objects.get(id=id)
           exam.delete()
-          return redirect('admin-view-course')
+          return redirect('admin-view-exam')
 
      return redirect('adminlogin')
 
@@ -414,6 +493,24 @@ def admin_add_question(request, exam_id):
           return render(request, 'exams/admin/admin_add_question.html' , context={'user': AdminUser,'exam':exam})
      return redirect('adminlogin')
 
+def upload_questions_view(request, exam_id):
+    try:
+        exam = mdb_models.Exam.objects.get(id=exam_id)
+        AdminUser = request.session['admin_user']
+    except mdb_models.Exam.DoesNotExist:
+        raise Http404("Exam does not exist")
+    except KeyError:
+        return HttpResponse("Unauthorized: Admin session not found", status=401)
+
+    if request.method == 'POST':
+        uploaded_file = request.FILES.get('docx_file')
+        if uploaded_file and uploaded_file.name.endswith('.docx'):
+            import_questions_from_docx(uploaded_file, exam)
+            return redirect('admin-view-question', exam_id)
+        else:
+          return render(request, 'exams/admin/admin_add_question.html', {'error': "Invalid file format. Please upload a .docx file.", 'user': AdminUser, 'exam':exam})
+    return render(request,  'exams/admin/admin_add_question.html' , context={'user': AdminUser,'exam':exam})
+
 def add_question(request, exam_id):
     try:
         exam = mdb_models.Exam.objects.get(id=exam_id)
@@ -422,26 +519,6 @@ def add_question(request, exam_id):
     except mdb_models.Exam.DoesNotExist:
         raise Http404("Exam does not exist")
 
-    if request.method == 'POST':
-     
-        question_text = request.POST.get('question')
-        option1 = request.POST.get('opt1')
-        option2 = request.POST.get('opt2')
-        option3 = request.POST.get('opt3')
-        option4 = request.POST.get('opt4')
-        answer = request.POST.get('answer')
-     #    marks = request.POST.get('marks')
-
-        mdb_models.Question.objects.create(
-             exams=exam,
-             question=question_text,
-             option1=option1,
-             option2=option2,
-             option3=option3,
-             option4=option4,
-             answer=answer
-            )
-        return redirect('add-question', exam_id)
 
     return render(request,  'exams/admin/admin_add_question.html' , context={'user': AdminUser,'exam':exam})
 

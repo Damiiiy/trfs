@@ -25,14 +25,14 @@
 <div class="container">
   <div class="panel panel-primary rounded-0">
     <div class="panel-heading rounded-0">
-      <h6 class="panel-title">Questions for {{ exam.subj_name }}</h6>
+      <h6 class="panel-title">Questions for {{ exam.subj_name }} {{exam.assigned_class}}</h6>
     </div>
     <table class="table table-hover table-bordered" id="dev-table">
       <thead>
         <tr>
 
           <th>Questions</th>
-         
+          <th>Correct Answer</th>
           <th>Marks</th>
           <th>Action</th>
         </tr>
@@ -41,7 +41,7 @@
       <tr>
 
         <td> {{c.question}}</td>
-        
+        <td> {{c.answer}}</td>
         <td>1</td>
         <td><a class="btn btn-danger btn-xs" style="border-radius: 0%;" href="{% comment "" %}{% url 'delete-question' c.id  %}{% endcomment %}#"><span class="glyphicon glyphicon-trash"></span></a></td>
         

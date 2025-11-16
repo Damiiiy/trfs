@@ -1,6 +1,7 @@
 {% extends 'exams/students/studentbase.html' %}
 {% block content %} 
 {%load static%}
+<!--{% load custom_tags %}-->
 
 <head>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -15,175 +16,81 @@
     {{error}}
 </div>
 {% else %}
+{% load custom_tags %}
 
+<div class="jumbotron my-4">
+  {% if error %}
+    <p style="color:red; text-align:center;">{{ error }}</p>
+  {% endif %}
+  {% if success %}
+    <p style="color:green; text-align:center;">{{ success }}</p>
+  {% endif %}
+  {% if exam %}
+    <h2 style="text-align: center;">Course: {{ exam.subj_name }}</h2>
+    <form method="post" action="{% url 'calculate-marks' %}" autocomplete="off">
+         <div class="alert alert-warning text-center fixed-top py-2" style="z-index: 1050;">
+             <strong>Time Remaining:</strong> <span id="timer">25:00</span>
+         </div>
+      {% csrf_token %}
+      <input type="hidden" name="exam_id" value="{{ exam.id }}">
 
-    <div class="jumbotron my-4">
+      {% for q in question %}
+        <div class="d-flex w-100 align-items-center">
+          <div class="col-auto flex-shrink-1 flex-grow-1">
+            <h3>{{ forloop.counter }}. {{ q.question }}</h3>
+          </div>
+          <div class="col-auto">
+            <h4 style="text-align: right;">[{{ q.marks }} Marks]</h4>
+          </div>
+        </div>
+        {% for opt in option_labels %}
+          <div class="form-check mx-4 d-flex align-items-center">
+            <input class="form-check-input" type="radio"
+                   name="question_{{ q.id }}"
+                   id="{{ opt.0 }}_{{ q.id }}"
+                   value="{{ opt.1 }}">
+            <label class="form-check-label ml-3" for="{{ opt.0 }}_{{ q.id }}">
+              {{ q|attr:opt.0 }}
+            </label>
+          </div>
+        {% endfor %}
+      {% endfor %}
 
-        <form class="form" autocomplete="off" onsubmit="return saveAns()" action="{% url 'calculate-marks' %}" method="POST">
-            {% csrf_token %}
-            {% comment %} <h2 style="text-align: center;">Course: {{exam.subj_name}}</h2>
-            {% for q in question %}
-            <div class="d-flex w-100 align-items-center">
-                <div class="col-auto flex-shrink-1 flex-grow-1">
-                    <h3 class="">{{ forloop.counter }}. {{q.question}}</h3>
-                </div>
-                <div class="col-auto">
-                    <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-                </div>
-            </div>
-            <input type="hidden" name="exam_id" value="{{ exam.id }}">
+      <input class="btn btn-primary btn-lg mt-4" type="submit" value="Submit Answers">
+    </form>
 
+    <script>
+//const totalSeconds = 25 * 60; // 25 minutes
+  const totalSeconds = 1 * 60; // 25 minutes
+  let timeLeft = totalSeconds;
+  const timerDisplay = document.getElementById('timer');
+  const form = document.querySelector('form');
 
-            <div class="form-check mx-4 d-flex align-items-center">
-                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
-                <label class="form-check-label ml-3" for="option1">
-                {{q.option1}}
-                </label>
-            </div>
+  function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
 
+  function startTimer() {
+    updateTimer();
+    const countdown = setInterval(() => {
+      timeLeft--;
+      updateTimer();
 
-            <div class="form-check mx-4 d-flex align-items-center">
-                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
-                <label class="form-check-label ml-3" for="option2">
-                {{q.option2}}
-                </label>
-            </div>
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        alert("Time is up! Submitting your answers...");
+        form.submit();
+      }
+    }, 1000);
+  }
 
+  window.onload = startTimer;
+</script>
+  {% endif %}
+</div>
 
-            <div class="form-check mx-4 d-flex align-items-center">
-                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
-                <label class="form-check-label ml-3" for="option3">
-                {{q.option3}}
-                </label>
-            </div>
-
-
-            <div class="form-check mx-4 d-flex align-items-center">
-                <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
-                <label class="form-check-label ml-3" for="option4">
-                {{q.option4}}
-                </label>
-            </div>
-
-            {% endfor %}
-            <input class="btn btn-primary btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
-            {% if error %}
-            <p style="color:red;">{{error}}</p>
-            {% endif %} {% endcomment %}
-
-            {% comment %} <h2 style="text-align: center;">Course: {{exam.subj_name}}</h2>
-                    {% for q in question %}
-                    <div class="d-flex w-100 align-items-center">
-                        <div class="col-auto flex-shrink-1 flex-grow-1">
-                            <h3 class="">{{ forloop.counter }}. {{q.question}}</h3>
-                        </div>
-                        <div class="col-auto">
-                            <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-                        </div>
-                    </div>
-                    <input type="hidden" name="exam_id" value="{{ exam.id }}">
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="{{ q.id }}" id="{{q.option1}}" value="Option1">
-                        <label class="form-check-label ml-3" for="{{q.option1}}">
-                        {{q.option1}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="{{ q.id }}" id="{{q.option2}}" value="Option2">
-                        <label class="form-check-label ml-3" for="{{q.option2}}">
-                        {{q.option2}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="{{ q.id }}" id="{{q.option3}}" value="Option3">
-                        <label class="form-check-label ml-3" for="{{q.option3}}">
-                        {{q.option3}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="{{ q.id }}" id="{{q.option4}}" value="Option4">
-                        <label class="form-check-label ml-3" for="{{q.option4}}">
-                        {{q.option4}}
-                        </label>
-                    </div>
-                    {% endfor %}
-                    <input class="btn btn-primary btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
-                    {% if error %}
-                    <p style="color:red;">{{error}}</p>
-                    {% endif %} {% endcomment %}
-
-
-                    <h2 style="text-align: center;">Course: {{exam.subj_name}}</h2>
-                    {% for q in question %}
-                    <div class="d-flex w-100 align-items-center">
-                        <div class="col-auto flex-shrink-1 flex-grow-1">
-                            <h3 class="">{{ forloop.counter }}. {{q.question}}</h3>
-                        </div>
-                        <div class="col-auto">
-                            <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-                        </div>
-                    </div>
-                    <input type="hidden" name="exam_id" value="{{ exam.id }}">
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="question_{{ q.id }}" id="option1_{{ q.id }}" value="Option1">
-                        <label class="form-check-label ml-3" for="option1_{{ q.id }}">
-                        {{q.option1}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="question_{{ q.id }}" id="option2_{{ q.id }}" value="Option2">
-                        <label class="form-check-label ml-3" for="option2_{{ q.id }}">
-                        {{q.option2}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="question_{{ q.id }}" id="option3_{{ q.id }}" value="Option3">
-                        <label class="form-check-label ml-3" for="option3_{{ q.id }}">
-                        {{q.option3}}
-                        </label>
-                    </div>
-
-                    <div class="form-check mx-4 d-flex align-items-center">
-                        <input class="form-check-input" type="radio" name="question_{{ q.id }}" id="option4_{{ q.id }}" value="Option4">
-                        <label class="form-check-label ml-3" for="option4_{{ q.id }}">
-                        {{q.option4}}
-                        </label>
-                    </div>
-                    {% endfor %}
-                    <input class="btn btn-primary btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
-                    {% if error %}
-                    <p style="color:red;">{{error}}</p>
-                    {% endif %}
-        </form>
-    </div>
+</div>
 {% endif %}
-{% comment %} <script>
-    function saveAns() {
-
-        var ele = document.getElementsByTagName('input');
-        for (i = 0; i < ele.length; i++) {
-            if (ele[i].type = "radio") {
-                if (ele[i].checked) {
-                    setCookie(ele[i].name, ele[i].value, 3)
-                }
-            }
-        }
-
-    }
-
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-</script>  {% endcomment %}
-
-<br><br><br><br><br><br> {% endblock content %}
+{% endblock content %}

@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin-questions', views.admin_question, name='admin_question'), # questions form admin
 
     path('admin-add-question/<int:id>', views.admin_add_question,name='admin-add-question'), 
+    path('admin-upload-question/<int:exam_id>', views.upload_questions_view, name='admin-upload-question'),
     path('admin-create-exams', views.admin_create_exams, name='admin_create_exams'),
 
     path('admin-view-question/<int:exam_id>', views.admin_view_question, name='admin-view-question'),

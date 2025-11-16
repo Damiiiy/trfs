@@ -47,17 +47,16 @@
           
           <th>Class</th>
           <th>Date</th>
+          <th>Exam Pin</th>
           <th>Action</th>
         </tr>
       </thead>
       {% for t in x %}
       <tr>
-
         <td> {{t.subj_name}}</td>
-       
         <td>{{t.assigned_class}}</td>
-
         <td> {{t.exam_date}}</td>
+        <td> {{t.code}}</td>
         
         <td class="text-center">
           <a class="btn btn-primary btn-xs" style="border-radius: 0%;"  href="{% url 'add-question' t.id %}"><span class="fas fa-plus"> Add Question </span></a>&nbsp;

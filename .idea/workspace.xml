@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3177dc18-12c6-46a4-841f-78463dac2fb3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/examportal/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/examportal/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examportal/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/examportal/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examportal/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/examportal/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resultapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/resultapp/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resultapp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/resultapp/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resultapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/resultapp/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resultchecker/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/resultchecker/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/admin/admin_add_question.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/admin/admin_add_question.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/admin/admin_create_exam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/admin/admin_create_exam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/admin/admin_view_exam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/admin/admin_view_exam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/admin/adminbase.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/admin/adminbase.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/admin/view_question.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/admin/view_question.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/students/start_exam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/students/start_exam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/students/student_exam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/students/student_exam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/students/studentbase.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/students/studentbase.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/students/success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/students/success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/exams/students/take_exam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/exams/students/take_exam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/results/teachers/t_dashb.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/results/teachers/t_dashb.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/results/teachers/tbase.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/results/teachers/tbase.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="35QbWyxIKJldMW4cN6CiDeZTaDK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-fc1d50d2d915-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.24978.54" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3177dc18-12c6-46a4-841f-78463dac2fb3" name="Changes" comment="" />
+      <created>1763045283321</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763045283321</updated>
+    </task>
+    <servers />
+  </component>
+</project>
